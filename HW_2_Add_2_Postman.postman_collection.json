@@ -1,0 +1,261 @@
+{
+	"info": {
+		"_postman_id": "d767c55d-4b2a-4632-acc8-ee02ea268702",
+		"name": "HW_2_Add_2_Postman",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21369719"
+	},
+	"item": [
+		{
+			"name": "02_Object_info_4",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const respPersonInfo = pm.response.json();",
+							"const reqPersonInfo = pm.request.url.query.toObject();",
+							"",
+							"// http://162.55.220.72:5007/object_info_4",
+							"// * Преобразовать пункты 12-13-14 (salary из реквеста и респонса равны) таким образом, чтобы проверка производилась циклом, в котором будет всего ОДИН тест. Имя теста должно меняться в зависимости от значения в Salary",
+							"",
+							"const reqSalary = Number(reqPersonInfo.salary);",
+							"const respSalary = respPersonInfo.salary",
+							"let count = 1",
+							"respSalary.forEach((responseSalary) => {",
+							"    pm.test(`Salary ${responseSalary} from response eql salary from request * ${count}`, function () {",
+							"    pm.expect(Number(responseSalary)).to.eql(reqSalary * count);",
+							"    count += 1;",
+							"})",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://162.55.220.72:5005/object_info_4?name=Kleo&age=17&salary=1000",
+					"protocol": "http",
+					"host": [
+						"162",
+						"55",
+						"220",
+						"72"
+					],
+					"port": "5005",
+					"path": [
+						"object_info_4"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "Kleo"
+						},
+						{
+							"key": "age",
+							"value": "17"
+						},
+						{
+							"key": "salary",
+							"value": "1000"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "03_Object_info_3",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//  Преобразовать задания 5-7 (сравнить идентичные поля в реквесте и респонсе) таким образом, чтобы это делалось ЗА ОДИН ТЕСТ (сразу все 3 поля) БЕЗ ЦИКЛОВ! (глубокое сравнение объектов)",
+							"",
+							"const respPersonInfo = pm.response.json();",
+							"const reqPersonInfo = pm.request.url.query.toObject();",
+							"",
+							"const newObject = {",
+							"    name: respPersonInfo.name,",
+							"    age: respPersonInfo.age,",
+							"    salary: String(respPersonInfo.salary)",
+							"};",
+							"",
+							"pm.test(\"Are the same params in request and response?\", function () {",
+							"    pm.expect(newObject).to.deep.equal(reqPersonInfo);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://162.55.220.72:5005/object_info_3?name=Felix&age=55&salary=2000",
+					"protocol": "http",
+					"host": [
+						"162",
+						"55",
+						"220",
+						"72"
+					],
+					"port": "5005",
+					"path": [
+						"object_info_3"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "Felix"
+						},
+						{
+							"key": "age",
+							"value": "55"
+						},
+						{
+							"key": "salary",
+							"value": "2000"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "04_User_info_2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const respUserInfo = pm.response.json();",
+							"const reqUserInfo = request.data;",
+							"const reqSalary = Number(reqUserInfo.salary)",
+							"// 1)  Преобразовать задания 8 - 13 (проверить что в json имеется нужный параметр) таким образом, чтобы все проверки делались в цикле (1 проверка в цикле, в которую попадают нужные параметры). Название теста должно видоизменяться исходя из подаваемых данных. ( ${}  или другим способом)",
+							"",
+							"for (let property in respUserInfo) {",
+							"    pm.test(`User info has ${property} parameter`, function () {",
+							"        pm.expect(respUserInfo).to.have.property(property);;",
+							"    });",
+							"}",
+							"",
+							"// // 2) ** Преобразовать задания 14 - 18 (проверить что параметр равен salary умножить на коэффициент) таким образом, чтобы все проверки делались в цикле (1 проверка в цикле, в которую попадают нужные параметры). Название теста должно видоизменяться исходя из подаваемых данных. ( ${}  или другим способом)",
+							"",
+							"for (let property in respUserInfo) {",
+							"    if (!property.includes('qa_salary'))",
+							"        continue;",
+							"",
+							"    let koef;",
+							"    switch (property) {",
+							"        case 'start_qa_salary':",
+							"            koef = 1;",
+							"            break;",
+							"        case 'qa_salary_after_6_months':",
+							"            koef = 2;",
+							"            break;",
+							"        case 'qa_salary_after_12_months':",
+							"            koef = 2.7;",
+							"            break;",
+							"        case 'qa_salary_after_1.5_year':",
+							"            koef = 3.3;",
+							"            break;",
+							"        case 'qa_salary_after_3.5_years':",
+							"            koef = 3.8;",
+							"            break;",
+							"    }",
+							"",
+							"    pm.test(`Is ${property} eql request salary * ${koef}`, function () {",
+							"        pm.expect(respUserInfo[property]).to.eql(reqSalary * koef);",
+							"",
+							"    })",
+							"}",
+							"",
+							"// 3) *** Преобразовать описанные выше задания 1 и 2 для данного эндпоинта в ОДИН ЦИКЛ, в котором будут проходить ОБА теста.",
+							"",
+							"// for (let property in respUserInfo) {",
+							"//     pm.test(`User info has ${property} parameter`, function () {",
+							"//         pm.expect(respUserInfo).to.have.property(property);",
+							"//     });",
+							"",
+							"//     if (!property.includes('qa_salary'))",
+							"//         continue;",
+							"",
+							"//     let koef;",
+							"//     switch (property) {",
+							"//         case 'start_qa_salary':",
+							"//             koef = 1;",
+							"//             break;",
+							"//         case 'qa_salary_after_6_months':",
+							"//             koef = 2;",
+							"//             break;",
+							"//         case 'qa_salary_after_12_months':",
+							"//             koef = 2.7;",
+							"//             break;",
+							"//         case 'qa_salary_after_1.5_year':",
+							"//             koef = 3.3;",
+							"//             break;",
+							"//         case 'qa_salary_after_3.5_years':",
+							"//             koef = 3.8;",
+							"//             break;",
+							"//     }",
+							"",
+							"//     pm.test(`Is ${property} eql request salary * ${koef}`, function () {",
+							"//         pm.expect(respUserInfo[property]).to.eql(reqSalary * koef);",
+							"",
+							"//     })",
+							"// }",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "{{name}}",
+							"type": "text"
+						},
+						{
+							"key": "age",
+							"value": "{{age}}",
+							"type": "text"
+						},
+						{
+							"key": "salary",
+							"value": "{{salary}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://162.55.220.72:5005/user_info_2",
+					"protocol": "http",
+					"host": [
+						"162",
+						"55",
+						"220",
+						"72"
+					],
+					"port": "5005",
+					"path": [
+						"user_info_2"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
